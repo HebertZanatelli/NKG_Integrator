@@ -1,0 +1,39 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="IntegratorSales.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="CriaCampos" Type="System.Boolean" Scope="Application">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="SAP_CompanyDB" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">SBO_TATI_PRD</Value>
+    </Setting>
+    <Setting Name="SAP_UserName" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">manager</Value>
+    </Setting>
+    <Setting Name="MYSQL_database" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">brb</Value>
+    </Setting>
+    <Setting Name="SAP_Password" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">IntraG!19</Value>
+    </Setting>
+    <Setting Name="SAP_Server" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">NDB@hanab1:30013</Value>
+    </Setting>
+    <Setting Name="SAP_LicenseServer" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">hanab1:40000</Value>
+    </Setting>
+    <Setting Name="SAP_DbServerType" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">HANA</Value>
+    </Setting>
+    <Setting Name="MYSQL_uid" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">tatiminas</Value>
+    </Setting>
+    <Setting Name="MYSQL_pwd" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">w2e3r4!</Value>
+    </Setting>
+    <Setting Name="MYSQL_Server" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">10.120.53.37</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

@@ -1,0 +1,397 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<queries>
+	<!--Query Matrix-->
+	<qCheck2>
+		<![CDATA[ 
+
+SELECT CASE WHEN  ('{0}' ) <> '' THEN 'TRUE' else 'FALSE' END "CHECK" FROM DUMMY
+
+]]>
+	</qCheck2>
+	<qAprov>
+		<![CDATA[ 
+
+	Select T0."DocEntry" from ODRF T0
+	inner join OWDD T1 on T1."DraftEntry" = T0."DocEntry" and T0."ObjType" = 17
+	where T1."DocEntry" is null and T1."Status" = 'Y'
+
+]]>
+	</qAprov>
+	<qAll>
+		<![CDATA[ 
+
+
+insert into "@SL_SINC" 
+select 
+
+ifnull((select max(cast("Code" as int)) +ROW_NUMBER() OVER (ORDER BY "ObjType", "Chave")  from "@SL_SINC" order by 1 desc),'1'),
+ifnull((select max(cast("Code" as int)) +ROW_NUMBER() OVER (ORDER BY "ObjType", "Chave")  from "@SL_SINC" order by 1 desc),'1'),
+"ObjType",
+"Chave",
+'', 
+'A', 'O' from (
+select '260' "ObjType", cast("ID" as nvarchar) "Chave" from OUSG union all
+select '40' "ObjType", cast("GroupNum" as nvarchar) from OCTG union all
+select '147' "ObjType", cast("PayMethCod" as nvarchar) from OPYM union all
+select 'Transp' "ObjType", cast("CardCode" as nvarchar) from OCRD where  "CardType" = 'S' union all
+select '247' "ObjType", cast("BPLId" as nvarchar) from OBPL union all
+select '2' "ObjType", cast("CardCode" as nvarchar) from OCRD where  "CardType" = 'C' union all
+select '4' "ObjType", cast("ItemCode" as nvarchar) from OITM 
+where "ItmsGrpCod" in (select "ItmsGrpCod" from OITB where "U_Portal_Integra" = 'S')
+
+union all
+select '11' "ObjType", cast("CntctCode" as nvarchar) from OCPR union all
+select '53' "ObjType", cast("SlpCode" as nvarchar) from OSLP union all
+select '6' "ObjType", cast("ListNum" as nvarchar) from OPLN 
+)M0
+
+
+]]>
+	</qAll>
+	<qCheck1>
+		<![CDATA[ 
+SELECT case when count(*) = 0 then 'FALSE' else 'TRUE' end "CHECK"
+FROM OINV T0  INNER JOIN INV6 T1 ON T0."DocEntry" = T1."DocEntry" 
+WHERE T1."DueDate" < current_date  and T1."Status" = 'O' and  T0."CardCode" = '{0}'
+]]>
+	</qCheck1>
+	<qSinc>
+		<![CDATA[ 
+select * from "@SL_SINC" where "U_Status" = 'O'
+]]>
+	</qSinc>
+
+	<OPLN>
+		<![CDATA[ 
+select "ListName" "Name" from OPLN where "ListNum" = '{0}'
+]]>
+	</OPLN>
+
+	<OPYM>
+		<![CDATA[ 
+select "Descript" "Name" from OPYM where "PayMethCod" = '{0}'
+]]>
+	</OPYM>
+
+	<OCTG>
+		<![CDATA[ 
+select "PymntGroup" "Name" from OCTG where "GroupNum" = '{0}'
+]]>
+	</OCTG>
+
+	<OUSG>
+		<![CDATA[ 
+select "Usage" "Name", "U_Portal_Integra" "Ativo" from OUSG where "ID" = '{0}'
+]]>
+	</OUSG>
+
+	<OBPL>
+		<![CDATA[ 
+select "BPLName" "Name" from OBPL where "BPLId" = '{0}'
+]]>
+	</OBPL>
+
+	<Transp>
+		<![CDATA[ 
+select "CardName" "Name" from OCRD where "CardCode" = '{0}'
+]]>
+	</Transp>
+
+	<Incoterms>
+		<![CDATA[ 
+  INSERT INTO `brb`.`Incoterms`(`Code`,`Name`)VALUES('0','CIF');
+  INSERT INTO `brb`.`Incoterms`(`Code`,`Name`)VALUES('1','FOB');
+  INSERT INTO `brb`.`Incoterms`(`Code`,`Name`)VALUES('9','Sem Ocorrência de Transporte.');
+  ]]>
+	</Incoterms>
+
+	<qReprovados>
+		<![CDATA[ 
+	Select T0."DocEntry",
+	T0."U_IdPortal",
+	T1."WddCode",
+	T1."Status",
+	T1."DocDate",
+	T1."CreateDate"
+	from ODRF T0
+	inner join OWDD T1 on T1."DraftEntry" = T0."DocEntry" and T0."ObjType" = 17
+	where T1."DocEntry" is null
+	--and T1."Status" = 'Y'
+	and T1."Status" = 'N'
+	--and T1."CreateDate" > DateAdd("d", -10)
+  ]]>
+	</qReprovados>
+
+
+	<Clientes>
+		<![CDATA[ 
+SELECT T0."CardCode", T0."CardName",  T0."CardFName", ifnull(T2."TaxId0",'') ||  ifnull(T2."TaxId4",'') "TaxIdNum",  
+ T2."TaxId1" "TaxIdNum2", ifnull(T0."Phone1",'') || ifnull(T0."Phone2",'') "Phone", T0."E_Mail" "Email", 
+
+T1."AddrType" "Cob_Type", ifnull(T1."Street",'') || ', ' || ifnull(T1."StreetNo",'') "Cob_Street",
+ T1."Building"  "Cob_Building", T1."Block" "Cob_Block", T1."ZipCode" "Cob_ZipCode", T1."City" "Cob_City", 
+ T1."State" "Cob_State", T1."Country" "Cob_Country",
+T3."AddrType" "Ent_Type", ifnull(T3."Street",'') || ', ' || ifnull(T3."StreetNo",'') "Ent_Street", 
+T3."Building"  "Ent_Building", T3."Block" "Ent_Block", T3."ZipCode" "Ent_ZipCode", T3."City" "Ent_City",
+ T3."State" "Ent_State", T3."Country" "Ent_Country",
+t0."PymCode" "FormaPagto", 1 "Filial" ,t0."GroupNum" "CondPagtos", '' "Tipo", 
+T0."SlpCode" "Vendedor",
+T0."ListNum" "TabelaPreco",
+case when
+(SELECT count(*) FROM INV6 T0  INNER JOIN OINV T1 ON T0."DocEntry" = T1."DocEntry" WHERE T1."CardCode" = '{0}' and  T0."Status"  = 'O' and  T0."DueDate" < CURRENT_DATE) > 0 
+then 'Sim' else 'Não' end "Inadimplencia",
+T0."MainUsage" "Utilizacao",
+T0."U_Antecipado" "Antecipado",
+case when T0."frozenFor" = 'N' then 'Y' else 'N' end "Ativo"
+FROM OCRD T0  
+LEFT JOIN CRD1 T1 ON T0."CardCode" = T1."CardCode" and t0."BillToDef" = t1."Address" and t1."AdresType" = 'B'
+LEFT JOIN CRD1 T3 ON T0."CardCode" = T3."CardCode" and t0."ShipToDef" = t3."Address" and t3."AdresType" = 'S'
+LEFT JOIN CRD7 T2 ON T0."CardCode" = T2."CardCode" and t2."Address" = ''
+where t0."CardCode" = '{0}'
+]]>
+	</Clientes>
+
+	<Itens>
+		<![CDATA[ 
+select t0."ItemCode" "ItemCode", "ItemName" "ItemName", t1."OnHand" "OnHand", 0 "preco", t0."DfltWH" "WhsCode", 0 "LastSalesPrice", T0."U_Bloqueado" "Bloqueado",
+t0."SalPackUn" "Multiplo"
+from OITM t0 left join OITW t1 on t0."ItemCode" = t1."ItemCode"
+and t0."DfltWH" = t1."WhsCode"
+left join (
+select z0."ItemCode", max(z0."Price") "Price" from inv1 z0 inner join (
+select "ItemCode", max("DocEntry") "DocEntry" from inv1 group by "ItemCode"
+) z1 on z0."ItemCode" = z1."ItemCode" and z0."DocEntry" = z1."DocEntry" group by z0."ItemCode"
+) z2 on z2."ItemCode" = t0."ItemCode"
+
+where t0."ItemCode" = '{0}'
+]]>
+	</Itens>
+
+	<Contato>
+		<![CDATA[ 
+select "CntctCode" "SAP_Id",
+"Name" "Name",
+"Position" "Setor",
+"Tel1" "Phone",
+"E_MailL" "Email",
+"CardCode" "CardCode"
+ from ocpr where "CntctCode" = '{0}'
+]]>
+	</Contato>
+
+	<Vendedor>
+		<![CDATA[ 
+SELECT T0."SlpCode" "CodeSAP", T0."SlpName" "nome", T0."Email" "usuario", T0."U_Senha" "senha", 'A' "situacao", '' "foto" FROM OSLP T0 WHERE T0."SlpCode" = '{0}'
+]]>
+	</Vendedor>
+
+	<MySQLClientesAdd>
+		<![CDATA[ 
+INSERT INTO `Clientes`
+(
+`CardCode`,
+`CardName`,
+`CardFName`,
+`TaxIdNum`,
+`TaxIdNum2`,
+`Phone`,
+`Email`,
+`Cob_Type`,
+`Cob_Street`,
+`Cob_Building`,
+`Cob_Block`,
+`Cob_ZipCode`,
+`Cob_City`,
+`Cob_State`,
+`Cob_Country`,
+`Ent_Type`,
+`Ent_Street`,
+`Ent_Building`,
+`Ent_Block`,
+`Ent_ZipCode`,
+`Ent_City`,
+`Ent_State`,
+`Ent_Country`,
+`FormaPagto`,
+`Filial`,
+`CondPagtos`,
+`Vendedor`,
+`Inadimplencia`,
+`TabelaPreco`,
+`Utilizacao`,
+`Antecipado`,
+`Ativo`
+)
+VALUES
+(
+<CardCode:>,
+<CardName:>,
+<CardFName:>,
+<TaxIdNum:>,
+<TaxIdNum2:>,
+<Phone:>,
+<Email:>,
+<Cob_Type:>,
+<Cob_Street:>,
+<Cob_Building:>,
+<Cob_Block:>,
+<Cob_ZipCode:>,
+<Cob_City:>,
+<Cob_State:>,
+<Cob_Country:>,
+<Ent_Type:>,
+<Ent_Street:>,
+<Ent_Building:>,
+<Ent_Block:>,
+<Ent_ZipCode:>,
+<Ent_City:>,
+<Ent_State:>,
+<Ent_Country:>,
+<FormaPagto:>,
+<Filial:>,
+<CondPagtos:>,
+<Vendedor:>,
+<Inadimplencia:>,
+<TabelaPreco:>,
+<Utilizacao:>,
+<Antecipado:>,
+<Ativo:>);
+
+]]>
+	</MySQLClientesAdd>
+	<MySQLClientesUpd>
+		<![CDATA[ 
+UPDATE `Clientes`
+SET
+`CardCode` = <CardCode:>,
+`CardName` = <CardName:>,
+`TaxIdNum` = <TaxIdNum:>,
+`TaxIdNum2` = <TaxIdNum2:>,
+`Phone` = <Phone:>,
+`Email` = <Email:>,
+`Cob_Type` = <Cob_Type:>,
+`Cob_Street` = <Cob_Street:>,
+`Cob_Building` = <Cob_Building:>,
+`Cob_Block` = <Cob_Block:>,
+`Cob_ZipCode` = <Cob_ZipCode:>,
+`Cob_City` = <Cob_City:>,
+`Cob_State` = <Cob_State:>,
+`Cob_Country` = <Cob_Country:>,
+`Ent_Type` = <Ent_Type:>,
+`Ent_Street` = <Ent_Street:>,
+`Ent_Building` = <Ent_Building:>,
+`Ent_Block` = <Ent_Block:>,
+`Ent_ZipCode` = <Ent_ZipCode:>,
+`Ent_City` = <Ent_City:>,
+`Ent_State` = <Ent_State:>,
+`Ent_Country` = <Ent_Country:>,
+`FormaPagto` = <FormaPagto:>,
+`Filial` = <Filial:>,
+`CondPagtos` = <CondPagtos:>,
+`TabelaPreco` = <TabelaPreco:>,
+`Vendedor` = <Vendedor:>,
+`Inadimplencia` = <Inadimplencia:>,
+`Utilizacao` = <Utilizacao:>,
+`Antecipado` = <Antecipado:>,
+`Ativo` = <Ativo:>
+WHERE `CardCode` = <CardCode:>;
+]]>
+	</MySQLClientesUpd>
+
+	<MySQLVendedorAdd>
+		<![CDATA[ 
+INSERT INTO brb.Usuario
+(usuario, senha, nome, situacao, foto, CodeSAP)
+VALUES(<usuario:>, <senha:>, <nome:>, <situacao:>, <foto:>, <CodeSAP:>);
+
+]]>
+	</MySQLVendedorAdd>
+	<MySQLVendedorUpd>
+		<![CDATA[ 
+
+
+UPDATE brb.Usuario
+SET usuario=<usuario:>, senha=<senha:>, nome=<nome:>, situacao=<situacao:>, foto=<foto:>
+WHERE CodeSAP=<CodeSAP:>;
+]]>
+	</MySQLVendedorUpd>
+
+	<MySQLItemAdd>
+		<![CDATA[ 
+    INSERT INTO `Itens`
+(
+`ItemCode`,
+`ItemName`,
+`LastSalesPrice`,
+`OnHand`,
+`WhsCode`,
+`preco`,
+`Bloqueado`,
+`Multiplo`)
+VALUES
+(
+<ItemCode:>,
+<ItemName:>,
+<LastSalesPrice:>,
+<OnHand:>,
+<WhsCode:>,
+<preco:>,
+<Bloqueado:>,
+<Multiplo:>);
+
+    ]]>
+	</MySQLItemAdd>
+	<MySQLItemUpd>
+		<![CDATA[ 
+    UPDATE `Itens`
+SET
+`ItemCode` = <ItemCode:>,
+`ItemName` = <ItemName:>,
+`LastSalesPrice` = <LastSalesPrice:>,
+`OnHand` = <OnHand:>,
+`WhsCode` = <WhsCode:>,
+`preco` = <preco:>,
+`Multiplo` = <Multiplo:>
+WHERE `ItemCode` =<ItemCode:>;
+
+    ]]>
+	</MySQLItemUpd>
+
+	<MySQLContatoAdd>
+		<![CDATA[ 
+INSERT INTO `Contato`
+(
+`SAP_Id`,
+`Name`,
+`Setor`,
+`Phone`,
+`Email`,
+`CardCode`)
+VALUES
+(
+<SAP_Id:>,
+<Name:>,
+<Setor:>,
+<Phone:>,
+<Email:>,
+<CardCode:>);
+    ]]>
+	</MySQLContatoAdd>
+	<MySQLContatoUpd>
+		<![CDATA[ 
+UPDATE`Contato`
+SET
+`SAP_Id` = <SAP_Id:>,
+`Name` = <Name:>,
+`Setor` = <Setor:>,
+`Phone` = <Phone:>,
+`Email` = <Email:>,
+`CardCode` = <CardCode:>
+WHERE `SAP_Id` =  <SAP_Id:>;
+
+
+    ]]>
+	</MySQLContatoUpd>
+
+
+</queries>
