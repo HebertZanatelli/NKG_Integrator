@@ -601,4 +601,4 @@ tramp
 # - Sempre revisar antes de fazer commit
 # - Verificar se não há dados sensíveis
 # - Usar 'git status' para confirmar arquivos ignorados
-# - Considerar usar .gitignore_global para configurações pessoais
+# - Considerar usar .gitignore_global para configurações pessoaisApp.config
